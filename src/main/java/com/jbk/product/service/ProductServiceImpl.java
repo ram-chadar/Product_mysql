@@ -245,7 +245,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public String exportToExcel(HttpSession session) {
 		List<Product> allProduct = getAllProduct();
-		String path = null;
+		String filePath = null;
 		String[] columns = { "ID", "NAME", "QTY", "PRICE", "TYPE" };
 		try {
 
@@ -305,7 +305,7 @@ public class ProductServiceImpl implements ProductService {
 
 			// Write the output to a file
 			//path = session.getServletContext().getRealPath("/exported");
-			String filePath = System.getProperty("user.home");
+			 filePath = System.getProperty("user.home");
 			filePath=filePath+"/Downloads";
 			
 			FileOutputStream fileOut = new FileOutputStream(filePath + File.separator + "product.xlsx");
@@ -318,7 +318,7 @@ public class ProductServiceImpl implements ProductService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "Exported at " + path;
+		return filePath + File.separator + "product.xlsx";
 	}
 
 }
