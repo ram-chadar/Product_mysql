@@ -304,8 +304,11 @@ public class ProductServiceImpl implements ProductService {
 			}
 
 			// Write the output to a file
-			path = session.getServletContext().getRealPath("/exported");
-			FileOutputStream fileOut = new FileOutputStream(path + File.separator + "product.xlsx");
+			//path = session.getServletContext().getRealPath("/exported");
+			String filePath = System.getProperty("user.home");
+			filePath=filePath+"/Downloads";
+			
+			FileOutputStream fileOut = new FileOutputStream(filePath + File.separator + "product.xlsx");
 			workbook.write(fileOut);
 			fileOut.close();
 
