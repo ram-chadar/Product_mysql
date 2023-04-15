@@ -3,6 +3,7 @@ package com.jbk.product.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -32,6 +33,6 @@ public interface ProductService {
 	public Map<String, Object> uploadSheet(CommonsMultipartFile file, HttpSession httpSession); // read data from excel
 																								// and write into DB
 
-	public String exportToExcel(HttpSession session);
+	public void exportToExcel(HttpServletResponse response);
 
 }

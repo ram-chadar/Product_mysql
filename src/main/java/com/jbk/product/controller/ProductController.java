@@ -1,14 +1,23 @@
 package com.jbk.product.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +39,7 @@ public class ProductController {
 
 	@Autowired
 	private ProductService service;
-	
+
 	@GetMapping(value = "/welcome")
 	public String welcome() {
 		return "Welcome";
@@ -152,9 +161,17 @@ public class ProductController {
 	}
 
 	@GetMapping(value = "/exportToExcel")
-	public ResponseEntity<String> exportToExcel(HttpSession session) {
-		String path = service.exportToExcel(session);
-		return new ResponseEntity<String>(path, HttpStatus.OK);
+	public void exportToExcel(HttpServletResponse response) {
+
+		response.setContentType("application/octet-stream");
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment; filename=Produts" + currentDateTime + ".xlsx";
+		response.setHeader(headerKey, headerValue);
+
+		service.exportToExcel(response);
 
 	}
 

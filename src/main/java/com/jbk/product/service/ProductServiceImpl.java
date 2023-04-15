@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -217,7 +219,7 @@ public class ProductServiceImpl implements ProductService {
 		String path = httpSession.getServletContext().getRealPath("/");
 		String fileName = file.getOriginalFilename();
 
-		int [] arr;
+		int[] arr;
 
 		FileOutputStream fos = null;
 		byte[] data = file.getBytes();
@@ -243,7 +245,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public String exportToExcel(HttpSession session) {
+	public void exportToExcel(HttpServletResponse response) {
 		List<Product> allProduct = getAllProduct();
 		String filePath = null;
 		String[] columns = { "ID", "NAME", "QTY", "PRICE", "TYPE" };
@@ -280,8 +282,6 @@ public class ProductServiceImpl implements ProductService {
 				cell.setCellStyle(headerCellStyle);
 			}
 
-			
-
 			// Create Other rows and cells with products data
 			int rowNum = 1;
 			for (Product product : allProduct) {
@@ -304,21 +304,19 @@ public class ProductServiceImpl implements ProductService {
 			}
 
 			// Write the output to a file
-			//path = session.getServletContext().getRealPath("/exported");
-			 filePath = System.getProperty("user.home");
-			filePath=filePath+"/Downloads";
-			
-			FileOutputStream fileOut = new FileOutputStream(filePath + File.separator + "product.xlsx");
-			workbook.write(fileOut);
-			fileOut.close();
+			// path = session.getServletContext().getRealPath("/exported");
+			filePath = System.getProperty("user.home");
+			filePath = filePath + "/Downloads";
 
-			// Closing the workbook
+			ServletOutputStream outputStream = response.getOutputStream();
+			workbook.write(outputStream);
 			workbook.close();
+			outputStream.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return filePath + File.separator + "product.xlsx";
+		
 	}
 
 }
